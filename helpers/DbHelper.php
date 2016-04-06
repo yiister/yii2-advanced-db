@@ -27,6 +27,18 @@ class DbHelper
     }
 
     /**
+     * Build columns key
+     * @param string|string[] $columns
+     * @return string
+     */
+    protected static function buildColumnsKey($columns)
+    {
+        return is_array($columns)
+            ? implode('-', $columns)
+            : preg_replace('#[^A-Za-z_]+#', '', str_replace(',', '-', $columns));
+    }
+
+    /**
      * Check foreign key
      * @param string $table
      * @param string[]|string $columns
@@ -68,7 +80,7 @@ class DbHelper
     {
         return ($unique ? 'uq-' : 'ix-')
             . trim(static::getDb($db)->quoteSql($tableName), '`') . '-'
-            . implode('-', (array) $columns);
+            . static::buildColumnsKey($columns);
     }
 
     /**
@@ -82,7 +94,7 @@ class DbHelper
      */
     public static function buildForeignKey($table, $columns, $refTable, $refColumns, $db = null)
     {
-        return 'fk-' . trim(static::getDb($db)->quoteSql($table), '`') . '-' . implode('-', (array) $columns) . '-'
-            . trim(static::getDb($db)->quoteSql($refTable), '`') . '-' . implode('-', (array) $refColumns);
+        return 'fk-' . trim(static::getDb($db)->quoteSql($table), '`') . '-' . static::buildColumnsKey($columns) . '-'
+            . trim(static::getDb($db)->quoteSql($refTable), '`') . '-' . static::buildColumnsKey($refColumns);
     }
 }
