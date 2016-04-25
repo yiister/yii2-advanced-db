@@ -26,7 +26,7 @@ trait MigrationTrait
     public function addForeignKey($name, $table, $columns, $refTable, $refColumns, $delete = null, $update = null)
     {
         if ($name === null) {
-            DbHelper::buildForeignKey($table, $columns, $refTable, $refColumns, $this->db);
+            $name = DbHelper::buildForeignKey($table, $columns, $refTable, $refColumns, $this->db);
         }
         parent::addForeignKey($name, $table, $columns, $refTable, $refColumns, $delete, $update);
     }
